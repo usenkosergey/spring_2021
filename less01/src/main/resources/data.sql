@@ -1,0 +1,10 @@
+INSERT INTO books(author, title, size) VALUES ( 'Author1', 'Title1', 350 );
+INSERT INTO books(author, title, size) VALUES ( 'Author2', 'Title1', 35 );
+INSERT INTO books(author, title, size) VALUES ( 'Author3', 'Title1', 35 );
+INSERT INTO books(author, title, size) VALUES ( 'Author3', 'Title2', 100 );
+INSERT INTO books(author, title, size) VALUES ( 'Author1', 'Title3', 150 );
+INSERT INTO books(author, title, size) VALUES ( 'Author1', 'Title3', 150 );
+INSERT INTO books(author, title, size) VALUES ( 'Author4', 'Title3', 30 );
+INSERT INTO books(author, title, size) VALUES ( 'Author5', 'Title4', 30 );
+INSERT INTO books(author, title, size) VALUES ( 'Author6', 'Title5', 350 );
+INSERT INTO books(author, title, size) VALUES ( 'Author6', 'Title6', 350 );

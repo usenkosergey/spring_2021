@@ -1,0 +1,46 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book shelf login</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            text-align: center;
+        }
+
+        #login_form {
+            margin-top: 10%;
+        }
+
+        .login_item {
+            margin-bottom: 10px;
+        }
+
+        .reg {
+            padding-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<div id="login_form">
+    <form method="post" th:action="@{/login/auth}" th:object="${loginForm}">
+        <img class="login_item" th:src="@{/images/book_icon.png}">
+        <br>
+        <input class="login_item" type="text" placeholder="enter username" th:field="*{username}">
+        <br>
+        <input class="login_item" type="password" placeholder="password" th:field="*{password}">
+        <br>
+        <input class="login_item" type="submit" value="login">
+    </form>
+
+</div>
+<div class="reg">
+    <form method="post" th:action="@{/login/reg}" th:object="${loginForm}">
+        <input class="login_item" type="text" placeholder="enter new username" th:field="*{username}">
+        <br>
+        <input class="login_item" type="password" placeholder="password" th:field="*{password}">
+        <br>
+        <input class="login_item" type="submit" value="add new user ">
+    </form>
+</div>
+</body>
+</html>
