@@ -65,9 +65,6 @@ public class BookShelfController {
 
     @PostMapping("/remove")
     public String removeBook(@Valid RemoveObject removeObject, BindingResult bindingResult, Model model) {
-        System.out.println(removeObject.toString());
-        System.out.println("1 - " + removeObject.getRemoveTitle());
-        System.out.println("2 - " + removeObject.getRemoveValue());
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", new Book());
             model.addAttribute("bookList", bookService.getAllBooks());

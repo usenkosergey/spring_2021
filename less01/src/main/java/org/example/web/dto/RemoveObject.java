@@ -1,17 +1,7 @@
 package org.example.web.dto;
 
-
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 public class RemoveObject {
 
-    @NotBlank
-    @NotEmpty
-    @NotNull
-    @Digits(integer = 4, fraction = 0)
     private String removeValue;
     private String removeTitle;
 
