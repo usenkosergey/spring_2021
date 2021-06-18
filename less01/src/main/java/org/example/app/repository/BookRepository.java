@@ -4,7 +4,9 @@ import org.apache.log4j.Logger;
 import org.example.web.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -39,17 +41,32 @@ public class BookRepository implements ProjectRepository<Book> {
 
     @Override
     public void save(Book book) {
-        System.out.println("2-" + book.toString());
         String sql = "insert into books (author, title, size) " +
                 "values (:author, :title, :size)";
         jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(book));
     }
 
+    public void deleted(Book book) {
+        String sql = "DELETE FROM BOOKS WHERE ";
+        if (book.getId() != null) {
+            sql = sql + "id = " + book.getId() + " AND";
+        }
+        if (!book.getAuthor().isEmpty()) {
+            sql = sql + " author = \'" + book.getAuthor() + "\' AND";
+        }
+        if (!book.getTitle().isEmpty()) {
+            sql = sql + " title = \'" + book.getTitle() + "\' AND";
+        }
+        if (book.getSize() != null) {
+            sql = sql + " size = " + book.getSize();
+        }
 
-//    String sql = "insert into Person (first_Name, Last_Name, Address) " +
-//            "values (:firstName, :lastName, :address)";
-//        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(person));
-//
+        if (sql.substring(sql.length() - 3).equals("AND")) {
+            sql = sql.substring(0, sql.length() - 3);
+        }
+        System.out.println(sql);
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(book));
+    }
 
     @Override
     public List<Book> getSize(Integer size) {
@@ -84,47 +101,26 @@ public class BookRepository implements ProjectRepository<Book> {
         return books;
     }
 
+
+
+
     @Override
     public boolean removeItemById(Integer bookIdToRemove) {
-        for (Book book : getAllBooks()) {
-            if (book.getId().equals(bookIdToRemove)) {
-                logger.info("remove book completed: " + book);
-                return repo.remove(book);
-            }
-        }
         return false;
     }
 
     @Override
     public boolean removeItemBySize(Integer size) {
-        int startRepo = repo.size();
-        for (Book book : getAllBooks()) {
-            if (book.getSize().equals(size)) {
-                repo.remove(book);
-            }
-        }
-        return startRepo - repo.size() != 0;
+        return false;
     }
 
     @Override
     public boolean removeItemByTitle(String title) {
-        int startRepo = repo.size();
-        for (Book book : getAllBooks()) {
-            if (book.getTitle().equals(title)) {
-                repo.remove(book);
-            }
-        }
-        return startRepo - repo.size() != 0;
+        return false;
     }
 
     @Override
     public boolean removeItemByAuthor(String author) {
-        int startRepo = repo.size();
-        for (Book book : getAllBooks()) {
-            if (book.getAuthor().equals(author)) {
-                repo.remove(book);
-            }
-        }
-        return startRepo - repo.size() != 0;
+        return false;
     }
 }
