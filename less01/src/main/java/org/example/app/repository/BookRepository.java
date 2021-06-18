@@ -3,6 +3,7 @@ package org.example.app.repository;
 import org.apache.log4j.Logger;
 import org.example.web.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +38,20 @@ public class BookRepository implements ProjectRepository<Book> {
     }
 
     @Override
+    public void save(Book book) {
+        System.out.println("2-" + book.toString());
+        String sql = "insert into books (author, title, size) " +
+                "values (:author, :title, :size)";
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(book));
+    }
+
+
+//    String sql = "insert into Person (first_Name, Last_Name, Address) " +
+//            "values (:firstName, :lastName, :address)";
+//        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(person));
+//
+
+    @Override
     public List<Book> getSize(Integer size) {
         List<Book> books = new ArrayList<>();
         for (Book b : repo) {
@@ -67,13 +82,6 @@ public class BookRepository implements ProjectRepository<Book> {
             }
         }
         return books;
-    }
-
-    @Override
-    public void store(Book book) {
-        book.setId(book.hashCode());
-        logger.info("store new book: " + book);
-        repo.add(book);
     }
 
     @Override

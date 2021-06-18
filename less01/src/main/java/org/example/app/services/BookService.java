@@ -34,7 +34,7 @@ public class BookService {
     }
 
     public void saveBook(Book book) {
-        bookRepo.store(book);
+        bookRepo.save(book);
     }
 
     public boolean removeBookById(Integer bookIdToRemove) {

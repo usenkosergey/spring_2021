@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
+@Validated
 @Controller
 @RequestMapping(value = "/books")
 public class BookShelfController {
@@ -46,16 +48,17 @@ public class BookShelfController {
     }
 
     @PostMapping(value = "/save")
-    public String saveBook(@Valid Book book, BindingResult bindingResult, Model model) {
+    public String saveBook(@Valid Book book, BindingResult bindingResult, @RequestParam(value = "action") String action, Model model) {
+        System.out.println("0 - " + action);
+        System.out.println("1 - " + bindingResult.hasErrors());
+        System.out.println("2 - " + book.toString());
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", book);
             model.addAttribute("bookList", bookService.getAllBooks());
-            model.addAttribute("removeObject", new RemoveObject());
+            //model.addAttribute("removeObject", new RemoveObject());
             return "book_shelf";
         } else {
-            if (!book.getAuthor().isEmpty() ||
-                    book.getSize() != null ||
-                    !book.getTitle().isEmpty()) {
+            if (!book.getAuthor().isEmpty() && !book.getTitle().isEmpty()) {
                 bookService.saveBook(book);
             }
             logger.info("current repository size: " + bookService.getAllBooks().size());

@@ -35,47 +35,9 @@
         <table>
             <tr>
                 <td>
-                    <input type="text" placeholder="author" th:field="*{author}">
+                    <input type="text" placeholder="id" th:field="*{id}">
+                    <p th:if="${#fields.hasErrors('id')}">only digit</p>
                 </td>
-                <td>
-                    <input type="text" placeholder="book_title" th:field="*{title}">
-                </td>
-                <td>
-                    <input type="text" placeholder="size (pages)" th:field="*{size}">
-                    <p th:if="${#fields.hasErrors()}">only digit and less than 4 signs</p>
-                </td>
-                <td>
-                    <input type="submit" value="save" name="action">
-                </td>
-            </tr>
-        </table>
-    </form>
-
-    <form method="post" th:action="@{/books/remove}" th:object="${removeObject}">
-        <table>
-            <tr>
-                <td>
-                    <input type="text" th:field="*{removeValue}">
-                    <select type="text" th:field="*{removeTitle}">
-                        <option value="bookId">book ID</option>
-                        <option value="author">author</option>
-                        <option value="title">title</option>
-                        <option value="size">size</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="submit" value="remove">
-                </td>
-                <td th:if="${#fields.hasErrors()}">
-                    <p>Empty field or not found</p>
-                </td>
-            </tr>
-        </table>
-    </form>
-
-    <form method="get" th:action="@{/books/shelf}" th:object="${book}">
-        <table>
-            <tr>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
                 </td>
@@ -84,13 +46,20 @@
                 </td>
                 <td>
                     <input type="text" placeholder="size (pages)" th:field="*{size}">
+                    <p th:if="${#fields.hasErrors('size')}">only digit and less than 4 signs</p>
                 </td>
-                <td>
-                    <input type="submit" value="filter" name="action">
+            </tr>
+            <tr>
+                <td colspan="4" align="center">
+                    <button type="submit" name="action" value="save">save new book</button>
+                    <button type="submit" name="action" value="filter">filtering</button>
+                    <button type="submit" name="action" value="deleted">deleted book</button>
                 </td>
             </tr>
         </table>
     </form>
+
+    <br><br>
     <form method="post" th:action="@{/books/uploadFile}" enctype="multipart/form-data">
         <table>
             <tr>

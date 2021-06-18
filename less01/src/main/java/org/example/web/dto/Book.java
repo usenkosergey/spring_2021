@@ -1,6 +1,7 @@
 package org.example.web.dto;
 
-import javax.validation.constraints.Digits;
+
+import jakarta.validation.constraints.Digits;
 
 public class Book {
     private Integer id;
