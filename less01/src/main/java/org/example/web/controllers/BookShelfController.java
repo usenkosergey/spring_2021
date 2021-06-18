@@ -3,7 +3,6 @@ package org.example.web.controllers;
 import org.apache.log4j.Logger;
 import org.example.app.services.BookService;
 import org.example.web.dto.Book;
-import org.example.web.dto.RemoveObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,11 +32,8 @@ public class BookShelfController {
     @GetMapping("/shelf")
     public String books(@Valid Book book, BindingResult bindingResult, @RequestParam(value = "action", defaultValue = "empty") String action, Model model) {
 
-        System.out.println("1 - " + action);
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", book);
-            model.addAttribute("bookList", bookService.getAllBooks());
             return "book_shelf";
         }
 
@@ -47,74 +43,12 @@ public class BookShelfController {
             bookService.deleteBook(book);
         }
 
-
-
-
-//        if (book.getSize() != null) {
-//            model.addAttribute("bookList", bookService.getSize(book.getSize()));
-//        } else if (book.getAuthor() != null && !book.getAuthor().isEmpty()) {
-//            model.addAttribute("bookList", bookService.getAuthor(book.getAuthor()));
-//        } else if (book.getTitle() != null && !book.getTitle().isEmpty()) {
-//            model.addAttribute("bookList", bookService.getTitle(book.getTitle()));
-//        } else {
-//            model.addAttribute("bookList", bookService.getAllBooks());
-//        }
         logger.info("got book shelf");
-        model.addAttribute("bookList", bookService.getAllBooks());
+        model.addAttribute("bookList", bookService.getBooks(book));
         model.addAttribute("book", new Book());
-        model.addAttribute("removeObject", new RemoveObject());
         return "book_shelf";
     }
 
-//    @PostMapping(value = "/save")
-//    public String saveBook(@Valid Book book, BindingResult bindingResult, @RequestParam(value = "action") String action, Model model) {
-//        System.out.println("0 - " + action);
-//        System.out.println("1 - " + bindingResult.hasErrors());
-//        System.out.println("2 - " + book.toString());
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("book", book);
-//            model.addAttribute("bookList", bookService.getAllBooks());
-//            //model.addAttribute("removeObject", new RemoveObject());
-//            return "book_shelf";
-//        } else {
-//            if (!book.getAuthor().isEmpty() && !book.getTitle().isEmpty()) {
-//                bookService.saveBook(book);
-//            }
-//            logger.info("current repository size: " + bookService.getAllBooks().size());
-//            return "redirect:/books/shelf";
-//        }
-//    }
-
-//    @PostMapping("/remove")
-//    public String removeBook(@Valid RemoveObject removeObject, BindingResult bindingResult, Model model) {
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("book", new Book());
-//            model.addAttribute("bookList", bookService.getAllBooks());
-//            model.addAttribute("removeObject", removeObject);
-//            return "book_shelf";
-//        } else {
-//            System.out.println("else");
-//            try {
-//                switch (removeObject.getRemoveTitle()) {
-//                    case "bookId":
-//                        bookService.removeBookById(Integer.parseInt(removeObject.getRemoveValue()));
-//                        break;
-//                    case "size":
-//                        bookService.removeItemBySize(Integer.parseInt(removeObject.getRemoveValue()));
-//                        break;
-//                    case "title":
-//                        bookService.removeItemByTitle(removeObject.getRemoveValue());
-//                        break;
-//                    case "author":
-//                        bookService.removeItemByAuthor(removeObject.getRemoveValue());
-//                        break;
-//                }
-//            } catch (NumberFormatException e) {
-//                e.printStackTrace();
-//            }
-//            return "redirect:/books/shelf";
-//        }
-//    }
 
     @PostMapping("/uploadFile")
     public String uplodeFile(@RequestParam("fileUp") MultipartFile file) throws Exception {

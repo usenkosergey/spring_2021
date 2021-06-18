@@ -17,37 +17,25 @@ public class BookService {
         this.bookRepo = bookRepo;
     }
 
-    public void saveBook(Book book) {
+    public Book saveBook(Book book) {
         if (!book.getAuthor().isEmpty() && !book.getTitle().isEmpty()) {
             bookRepo.save(book);
         }
+        return new Book();
     }
 
-    public void deleteBook(Book book) {
+    public Book deleteBook(Book book) {
         if (!book.getAuthor().isEmpty() ||
                 !book.getTitle().isEmpty() ||
                 book.getId() != null ||
                 book.getSize() != null) {
             bookRepo.deleted(book);
         }
-    }
-    //=========================
-
-
-    public List<Book> getAllBooks() {
-        return bookRepo.getAllBooks();
+        return new Book();
     }
 
-    public List<Book> getSize(Integer size) {
-        return bookRepo.getSize(size);
-    }
-
-    public List<Book> getAuthor(String author) {
-        return bookRepo.getAuthor(author);
-    }
-
-    public List<Book> getTitle(String title) {
-        return bookRepo.getTitle(title);
+    public List<Book> getBooks(Book book){
+        return bookRepo.getBooks(book);
     }
 
 }
