@@ -17,7 +17,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 public class WebContextConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:images");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/images");
     }
 
     @Bean
@@ -45,9 +45,9 @@ public class WebContextConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public CommonsMultipartResolver multipartResolver(){
+    public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(5000000);
+        multipartResolver.setMaxUploadSize(5_000_000); //5 mb
         return multipartResolver;
     }
 }
