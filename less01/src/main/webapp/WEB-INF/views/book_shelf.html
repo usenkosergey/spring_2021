@@ -68,10 +68,15 @@
                 </td>
                 <td>
                     <input type="submit" value="upload">
+                    <p th:text="${errorMessage}"></p>
                 </td>
             </tr>
         </table>
     </form>
+
+
+    <a th:href="@{'/books/downloadFile'}">book_icon.png</a>
+
     <table id="books">
         <tr>
             <th>id</th>
