@@ -24,18 +24,40 @@ public class BookService {
         return new Book();
     }
 
-    public Book deleteBook(Book book) {
-        if (!book.getAuthor().isEmpty() ||
-                !book.getTitle().isEmpty() ||
-                book.getId() != null ||
-                book.getSize() != null) {
-            bookRepo.deleted(book);
-        }
-        return new Book();
+    public boolean hasAllValuesEmpty(Book book) {
+        return book.getAuthor().equals("") && book.getTitle().equals("") && book.getSize() == null;
     }
 
-    public List<Book> getBooks(Book book){
-        return bookRepo.getBooks(book);
+    public List<Book> getAllBooks() {
+        return bookRepo.getAllBooks();
     }
 
+    public void removeById(Integer id) {
+        bookRepo.removeItemById(id);
+    }
+
+    public void removeBySize(Integer size) {
+        bookRepo.removeItemBySize(size);
+    }
+
+    public void removeByAuthor(String author) {
+        bookRepo.removeItemByAuthor(author);
+    }
+
+
+    public void removeByTitle(String title) {
+        bookRepo.removeItemByTitle(title);
+    }
+
+    public List<Book> getAllBooksByAuthor(String author) {
+        return bookRepo.getAuthor(author);
+    }
+
+    public List<Book> getAllBooksByTittle(String title) {
+        return bookRepo.getTitle(title);
+    }
+
+    public List<Book> getAllBooksBySize(Integer size) {
+        return bookRepo.getSize(size);
+    }
 }

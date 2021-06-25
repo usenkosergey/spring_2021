@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>My book shelf</title>
     <style>
         #root_container {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            /*position: absolute;*/
+            /*left: 50%;*/
+            /*top: 50%;*/
+            /*transform: translate(-50%, -50%);*/
         }
 
         #books {
@@ -17,7 +17,7 @@
         }
 
         table {
-            margin: 25px;
+            /*margin: 25px;*/
         }
 
         th {
@@ -30,52 +30,152 @@
     </style>
 </head>
 <body>
+<a href="../login">go to login</a>
+
+<!--Форма для подгрузки файла-->
+<p th:text="${errorMessage}"></p>
+<a href="../books/downloadFile">Download file from server</a>
+<form method="post"
+      th:action="@{/books/uploadFile}"
+      enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>
+                <input type="file" name="file"/>
+            </td>
+            <td>
+                <input type="submit" value="upload"/>
+            </td>
+        </tr>
+    </table>
+</form>
+<!--Форма для подгрузки файла-->
+
 <div id="root_container">
-    <form method="get" th:action="@{/books/shelf}" th:object="${book}">
+    <h3>Saving books</h3>
+
+    <form method="post" th:action="@{/books/save}" th:object="${book}">
         <table>
             <tr>
-                <td>
-                    <input type="text" placeholder="id" th:field="*{id}">
-                    <p th:if="${#fields.hasErrors('id')}">only digit</p>
-                </td>
                 <td>
                     <input type="text" placeholder="author" th:field="*{author}">
                 </td>
                 <td>
+                    <p th:if="${#fields.hasErrors('author')}">field author not be empty</p>
+                </td>
+
+                <td>
                     <input type="text" placeholder="book_title" th:field="*{title}">
                 </td>
                 <td>
+                    <p th:if="${#fields.hasErrors('title')}">field title not be empty</p>
+                </td>
+
+                <td>
                     <input type="text" placeholder="size (pages)" th:field="*{size}">
-                    <p th:if="${#fields.hasErrors('size')}">only digit and less than 4 signs</p>
+
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('size')}">field value mast be digit and less than 4 signs</p>
                 </td>
             </tr>
+
             <tr>
-                <td colspan="4" align="center">
-                    <button type="submit" name="action" value="save">save new book</button>
-                    <button type="submit" name="action" value="filter">filtering</button>
-                    <button type="submit" name="action" value="deleted">deleted book</button>
+                <td>
+                    <input type="submit" value="save">
                 </td>
             </tr>
         </table>
     </form>
 
-    <br><br>
-    <form method="post" th:action="@{/books/uploadFile}" enctype="multipart/form-data">
+    <h3>Deleting books</h3>
+
+    <form method="post" th:action="@{/books/remove}" th:object="${book2Remove}">
         <table>
             <tr>
                 <td>
-                    <input type="file" name="fileUp">
+                    <input type="text" placeholder="remove by id" th:field="*{id}">
                 </td>
+                <td th:if="${#fields.hasErrors('id')}">
+                    <p>Wrong id</p>
+                </td>
+            </tr>
+
+            <tr>
                 <td>
-                    <input type="submit" value="upload">
-                    <p th:text="${errorMessage}"></p>
+                    <input type="text" placeholder="remove by author" th:field="*{author}">
+                </td>
+                <td th:if="${#fields.hasErrors('author')}">
+                    <p>Wrong author</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="text" placeholder="remove by title" th:field="*{title}">
+                </td>
+                <td th:if="${#fields.hasErrors('title')}">
+                    <p>Wrong title</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="text" placeholder="remove by size" th:field="*{size}">
+                </td>
+                <td th:if="${#fields.hasErrors('size')}">
+                    <p>Wrong size</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="submit" value="remove">
                 </td>
             </tr>
         </table>
     </form>
 
+    <h3>Filtering books</h3>
 
-    <a th:href="@{'/books/downloadFile'}">book_icon.png</a>
+    <form method="post" th:action="@{/books/filter}" th:object="${book2Filter}">
+        <table>
+            <tr>
+                <td>
+                    <input type="text" placeholder="filter by author" th:field="*{author}">
+                </td>
+                <td th:if="${#fields.hasErrors('author')}">
+                    <p>Wrong author</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="text" placeholder="filter by title" th:field="*{title}">
+                </td>
+                <td th:if="${#fields.hasErrors('title')}">
+                    <p>Wrong title</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="text" placeholder="filter by size" th:field="*{size}">
+                </td>
+                <td th:if="${#fields.hasErrors('size')}">
+                    <p>Wrong size</p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="submit" value="filter">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <a href="../books/shelf">reset filters</a>
 
     <table id="books">
         <tr>

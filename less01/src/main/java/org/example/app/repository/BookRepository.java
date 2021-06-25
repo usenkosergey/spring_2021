@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.example.web.dto.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -22,12 +23,16 @@ public class BookRepository implements ProjectRepository<Book> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Book> getBooks(Book book) {
-        String sqlFull = "SELECT * FROM books ";
+    @Override
+    public void save(Book book) {
+        String sql = "INSERT INTO books (author, title, size) " +
+                "VALUES (:author, :title, :size)";
+        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(book));
+    }
 
-        if (!collectRequestString(book).isEmpty()) {
-            sqlFull = sqlFull + " WHERE " + collectRequestString(book);
-        }
+    @Override
+    public List<Book> getAllBooks() {
+        String sqlFull = "SELECT * FROM books ";
 
         List<Book> books = jdbcTemplate.query(sqlFull, (ResultSet rs, int rowNum) -> {
             Book bookRs = new Book();
@@ -36,87 +41,83 @@ public class BookRepository implements ProjectRepository<Book> {
             bookRs.setTitle(rs.getString("title"));
             bookRs.setSize(rs.getInt("size"));
             return bookRs;
-
         });
+
         return new ArrayList<>(books);
-    }
-
-    public String collectRequestString(Book book) {
-        String sql = "";
-        if (book.getId() != null) {
-            sql = sql + "id = " + book.getId() + " AND";
-        }
-        if (book.getAuthor() != null && !book.getAuthor().isEmpty()) {
-            sql = sql + " author = \'" + book.getAuthor() + "\' AND";
-        }
-        if (book.getTitle() != null && !book.getTitle().isEmpty()) {
-            sql = sql + " title = \'" + book.getTitle() + "\' AND";
-        }
-        if (book.getSize() != null) {
-            sql = sql + " size = " + book.getSize();
-        }
-
-        if (!sql.isEmpty() && sql.substring(sql.length() - 3).equals("AND")) {
-            sql = sql.substring(0, sql.length() - 3);
-        }
-        return sql;
-    }
-
-
-    @Override
-    public void save(Book book) {
-        String sql = "INSERT INTO books (author, title, size) " +
-                "VALUES (:author, :title, :size)";
-        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(book));
-    }
-
-    public void deleted(Book book) {
-        String sql = "DELETE FROM BOOKS WHERE ";
-
-        sql = sql + collectRequestString(book);
-        System.out.println(sql);
-        jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(book));
-    }
-
-
-    // это все не нужно
-    @Override
-    public List<Book> getAllBooks() {
-        return null;
     }
 
     @Override
     public List<Book> getSize(Integer size) {
-        return null;
+        String sqlFull = "SELECT * FROM books WHERE size = :size";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("size", size);
+
+        List<Book> books = jdbcQuery(sqlFull, parameterSource);
+        return new ArrayList<>(books);
     }
 
     @Override
     public List<Book> getAuthor(String author) {
-        return null;
+        String sqlFull = "SELECT * FROM books WHERE author = :author";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("author", author);
+
+        List<Book> books = jdbcQuery(sqlFull, parameterSource);
+        return new ArrayList<>(books);
     }
 
     @Override
     public List<Book> getTitle(String title) {
-        return null;
+        String sqlFull = "SELECT * FROM books WHERE title = :title";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("title", title);
+
+        List<Book> books = jdbcQuery(sqlFull, parameterSource);
+        return new ArrayList<>(books);
+    }
+
+    public List<Book> jdbcQuery(String sqlFull, MapSqlParameterSource parameterSource) {
+
+        return jdbcTemplate.query(sqlFull, parameterSource, (ResultSet rs, int rowNum) -> {
+            Book bookRs = new Book();
+            bookRs.setId(rs.getInt("id"));
+            bookRs.setAuthor(rs.getString("author"));
+            bookRs.setTitle(rs.getString("title"));
+            bookRs.setSize(rs.getInt("size"));
+            return bookRs;
+        });
+
     }
 
     @Override
     public boolean removeItemById(Integer bookIdToRemove) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", bookIdToRemove);
+        jdbcTemplate.update("DELETE FROM BOOKS WHERE id = :id", parameterSource);
         return false;
     }
 
     @Override
     public boolean removeItemBySize(Integer size) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("size", size);
+        jdbcTemplate.update("DELETE FROM BOOKS WHERE size = :size", parameterSource);
         return false;
     }
 
     @Override
     public boolean removeItemByTitle(String title) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("title", title);
+        jdbcTemplate.update("DELETE FROM BOOKS WHERE title = :title", parameterSource);
         return false;
     }
 
     @Override
     public boolean removeItemByAuthor(String author) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("author", author);
+        jdbcTemplate.update("DELETE FROM BOOKS WHERE author = :author", parameterSource);
         return false;
     }
 }
